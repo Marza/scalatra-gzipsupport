@@ -11,4 +11,4 @@ libraryDependencies ++= Seq(
   "javax" % "javaee-api" % "6.0" % "provided"
 )
 
-publishTo := Some(Resolver.file("file",  new File( "../mvn-repo/releases" )) )
+publishTo := Some(Resolver.file("file",  new File( "../repository/releases" )) )
