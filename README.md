@@ -28,7 +28,7 @@ Add this to your build.sbt file.
 
 <pre>
 libraryDependencies ++= Seq(
-  "se.marza" %% "scalatra-gzipsupport" % "0.1"
+  "se.marza" %% "scalatra-gzipsupport" % "0.2"
 )
 
 resolvers += "marza-repository" at "https://github.com/marza/repository/raw/master/releases"

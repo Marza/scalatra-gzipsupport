@@ -1,17 +1,58 @@
 package se.marza.scalatra.gzip
 
+import java.io.OutputStream
 import java.io.PrintWriter
 import java.util.zip.GZIPOutputStream
 import javax.servlet.ServletOutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletResponseWrapper
-import org.scalatra.ScalatraBase
 import org.scalatra.Handler
 import org.scalatra.Initializable
+import org.scalatra.ScalatraBase
 
-object GZipSupport {
-
+/** Scalatra support handler for gzipped responses */
+trait GZipSupport extends Handler with Initializable {
+  self: ScalatraBase =>
+  
+  abstract override def handle(req: HttpServletRequest, res: HttpServletResponse) {
+    
+    if (isGzip(req)) {
+      var w: PrintWriter = null
+      var s = new ContentLengthOutputStream(res.getOutputStream())
+      
+      val response = new HttpServletResponseWrapper(res) {
+	      override def getOutputStream(): ServletOutputStream = {
+	        val gzip = new GZIPOutputStream(s)
+	        w = new PrintWriter(gzip)
+	        return new ServletOutputStream {
+	          override def write(b: Int) = gzip.write(b)
+	        }
+	      }
+	      override def getWriter(): PrintWriter = {
+	        w = new PrintWriter(new GZIPOutputStream(s)); 
+	        return w
+	      }
+	      override def setContentLength(i: Int) = {} // ignoring content length as it wont be the same when gzipped
+      }
+      
+      super.handle(req, response)
+      
+      if (w != null) {
+      	response.addHeader("Content-Encoding", "gzip")
+      	
+	      w.flush
+	      w.close
+	      
+      	response.setContentLength(s.length)
+      }
+    }
+    else {
+      super.handle(req, res)
+    }
+  }
+  
+  /** Returns true if Accept-Encoding contains gzip */
   private def isGzip(request: HttpServletRequest): Boolean = {
 	  val encoding: java.util.Enumeration[_] = request.getHeaders("Accept-Encoding")
 	  
@@ -25,45 +66,13 @@ object GZipSupport {
 	}
 }
 
-trait GZipSupport extends Handler with Initializable {
-  self: ScalatraBase =>
-    
-  import GZipSupport._
+/** Wrapper output stream that counts the content length. */
+private class ContentLengthOutputStream(s: OutputStream) extends OutputStream {
+  var length = 0
+  private val stream = s
   
-  abstract override def handle(req: HttpServletRequest, res: HttpServletResponse) {
-    
-    if (isGzip(req)) {
-      var w: PrintWriter = null
-      
-      val response = new HttpServletResponseWrapper(res) {
-        
-	      override def getOutputStream(): ServletOutputStream = {
-	        var gzip = new GZIPOutputStream(res.getOutputStream())
-	        w = new PrintWriter(gzip)
-	        return new ServletOutputStream {
-	          override def write(b: Int) = {gzip.write(b)}
-	        }
-	      }
-	      override def getWriter(): PrintWriter = {
-	        w = new PrintWriter(new GZIPOutputStream(res.getOutputStream())); 
-	        return w
-	      }
-	      override def setContentLength(i: Int) = {
-	        println("Content-length should have been set to [" + i + "]")
-	      }
-      }
-      
-      super.handle(req, response)
-      
-      if (w != null) {
-      	response.addHeader("Content-Encoding", "gzip")
-
-	      w.flush
-	      w.close
-      }
-    }
-    else {
-      super.handle(req, res)
-    }
+  override def write(b: Int) = {
+    stream.write(b)
+    length += 1
   }
 }
