@@ -31,5 +31,5 @@ libraryDependencies ++= Seq(
   "se.marza" %% "scalatra-gzipsupport" % "0.1"
 )
 
-resolvers += "marza-mvn-repo" at "https://github.com/marza/mvn-repo/raw/master/releases"
+resolvers += "marza-repository" at "https://github.com/marza/repository/raw/master/releases"
 </pre>
