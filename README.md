@@ -3,7 +3,7 @@ scalatra-gzipsupport
 
 Scalatra handler for compressing responses with <a href="http://en.wikipedia.org/wiki/Gzip">gzip</a>
 
-Tested with scala 2.9.2 and scalatra 2.1.1
+Tested with scala 2.9.2, sbt 0.12.1 and scalatra 2.1.1
 
 Usage
 ----
