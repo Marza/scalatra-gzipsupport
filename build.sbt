@@ -1,6 +1,6 @@
 organization := "se.marza"
 
-name := "Scalatra GZipSupport"
+name := "scalatra-gzipsupport"
 
 version := "0.1"
 
