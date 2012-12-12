@@ -10,3 +10,5 @@ libraryDependencies ++= Seq(
   "org.scalatra" % "scalatra" % "2.1.1",
   "javax" % "javaee-api" % "6.0" % "provided"
 )
+
+publishTo := Some(Resolver.file("file",  new File( "../mvn-repo/releases" )) )
