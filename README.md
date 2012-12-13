@@ -1,3 +1,10 @@
+Discontinued
+====
+
+GZipSupport has been merged into develop branch of scalatra core. See https://github.com/scalatra/scalatra/pull/237
+
+Further development will be made there.
+
 scalatra-gzipsupport
 ====================
 
