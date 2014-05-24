@@ -5,6 +5,8 @@ GZipSupport has been merged into develop branch of scalatra core. See https://gi
 
 Further development will be made there.
 
+See the Scalatra docs at http://www.scalatra.org/2.2/guides/http/gzip.html
+
 scalatra-gzipsupport
 ====================
 
